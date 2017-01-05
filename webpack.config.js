@@ -3,12 +3,29 @@ const webpack = require('webpack')
 
 module.exports = [
   {
-    entry: path.resolve('.', 'src', 'main.js'),
-    output: {
-      path: path.resolve('.', 'dist'),
-      publicPath: '/dist/',
-      filename: 'bundle.js'
+    /**
+     * @see https://webpack.js.org/configuration/entry-context/
+     */
+    entry: {
+      main: path.resolve('.', 'src', 'main.js'),
+      vendor: [
+        'normalize.css',
+        'vue'
+      ]
     },
+
+    /**
+     * @see https://webpack.js.org/configuration/output/
+     */
+    output: {
+      filename: '[name].js',
+      path: path.resolve('.', 'dist'),
+      publicPath: '/dist/'
+    },
+
+    /**
+     * @see https://webpack.js.org/configuration/module/
+     */
     module: {
       loaders: [
         {
@@ -32,24 +49,46 @@ module.exports = [
         }
       ]
     },
+
+    /**
+     * @see https://webpack.js.org/configuration/plugins/
+     */
     plugins: [
-      new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true
-      }),
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify('production')
+          NODE_ENV: JSON.stringify('development')
         }
+      }),
+
+      /**
+       * @see https://webpack.js.org/guides/code-splitting-libraries/
+       */
+      new webpack.optimize.CommonsChunkPlugin({
+        names: [
+          'vendor',
+          'manifest'
+        ]
+      }),
+
+      new webpack.optimize.UglifyJsPlugin({
+        sourceMap: true
       })
     ],
+
+    /**
+     * @see https://webpack.js.org/configuration/dev-server/
+     */
     devServer: {
       compress: true,
-      contentBase: path.resolve(__dirname),
+      contentBase: path.resolve('.'),
       port: 8080,
       historyApiFallback: true,
       https: true
     },
+
+    /**
+     * @see https://webpack.js.org/configuration/devtool/
+     */
     devtool: 'inline-source-map'
   }
 ]
-

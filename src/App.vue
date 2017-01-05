@@ -7,9 +7,9 @@
     name: 'app',
     data () {
       return {
-        message: 'Hello, world.',
+        message: 'Hello, world.'
       }
-    },
+    }
   }
 </script>
 
@@ -17,6 +17,7 @@
   :root {
     --color-main: rgb(255, 0, 0);
   }
+
   p {
     color: var(--color-main);
   }
