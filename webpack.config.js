@@ -1,5 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+
+const env = process.env
 
 module.exports = [
   {
@@ -56,7 +59,7 @@ module.exports = [
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify('development')
+          NODE_ENV: JSON.stringify(env.NODE_ENV)
         }
       }),
 
@@ -70,7 +73,18 @@ module.exports = [
         ]
       }),
 
-      new webpack.optimize.UglifyJsPlugin({
+      /**
+       * @see https://webpack.js.org/plugins/loader-options-plugin/
+       */
+      new webpack.LoaderOptionsPlugin({
+        debug: env.NODE_ENV !== 'production',
+        minimize: env.NODE_ENV === 'production'
+      }),
+
+      /**
+       * @see https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
+       */
+      new UglifyJSPlugin({
         sourceMap: true
       })
     ],
