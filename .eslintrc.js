@@ -1,9 +1,6 @@
 module.exports = {
-    'extends': 'vue',
+    'extends': 'standard',
     'plugins': [
-        'standard',
-        'promise',
-        'vue',
         'html'
     ]
 }

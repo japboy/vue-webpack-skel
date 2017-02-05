@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+const app = new Vue({
+  render: h => h(App)
+})
+
 function init (ev) {
   document.removeEventListener(ev.type, init)
-
-  new Vue({
-    el: '#app',
-    render: h => h(App)
-  })
-
+  app.$mount('#app')
   console.log('Hello.')
 }
 

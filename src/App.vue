@@ -1,5 +1,7 @@
 <template>
-  <p>{{ message }}</p>
+  <main id="app">
+    <p>{{ message }}</p>
+  </main>
 </template>
 
 <script>
