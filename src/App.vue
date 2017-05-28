@@ -1,15 +1,17 @@
 <template>
   <main id="app">
-    <p>{{ message }}</p>
+    <p>1. Hello, {{ parentName }}.</p>
+    <p>2. Hello, {{ childName }}.</p>
   </main>
 </template>
 
 <script>
   export default {
     name: 'app',
+    props: ['parentName'],
     data () {
       return {
-        message: 'Hello, world.'
+        childName: 'Ivanka'
       }
     }
   }

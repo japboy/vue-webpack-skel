@@ -2,7 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 
 const app = new Vue({
-  render: h => h(App)
+  data: {
+    parentName: 'Donald'
+  },
+  render: h => h(App, {
+    props: app.$data
+  })
 })
 
 function init (ev) {

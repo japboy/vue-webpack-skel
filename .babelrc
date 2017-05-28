@@ -1,5 +1,21 @@
 {
   "presets": [
-    ["es2015", { "modules": false }]
+    [
+      "env", {
+        "modules": false,
+        "targets": {
+          "browsers": [
+            "Chrome >= 50",
+            "ChromeAndroid >= 50",
+            "Edge >= 12",
+            "Explorer >= 11",
+            "Firefox >= 40",
+            "FirefoxAndroid >= 40",
+            "iOS >= 7",
+            "Safari >= 6"
+          ]
+        }
+      }
+    ]
   ]
 }

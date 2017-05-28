@@ -10,7 +10,7 @@ module.exports = [
      * @see https://webpack.js.org/configuration/entry-context/
      */
     entry: {
-      main: path.resolve('.', 'src', 'main.js'),
+      main: path.resolve('.', 'src', 'index.js'),
       vendor: [
         'normalize.css',
         'vue'
@@ -22,32 +22,53 @@ module.exports = [
      */
     output: {
       filename: '[name].js',
-      path: path.resolve('.', 'dist'),
-      publicPath: '/dist/'
+      path: path.resolve('.', 'docs', 'assets'),
+      publicPath: '/assets/'
     },
 
     /**
      * @see https://webpack.js.org/configuration/module/
      */
     module: {
-      loaders: [
+      rules: [
         {
-          test: /\.(js|jsx)$/,
-          loader: 'babel-loader?cacheDirectory=true',
+          test: /\.js$/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            }
+          ],
           exclude: /node_modules/
         },
         {
           test: /\.css$/,
-          loaders: [
-            'style-loader',
-            'css-loader?modules&importLoaders=1',
-            'postcss-loader?sourceMap=inline'
+          use: [
+            {
+              loader: 'style-loader'
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: 'inline'
+              }
+            }
           ]
         },
         {
           test: /\.vue$/,
-          loaders: [
-            'vue-loader'
+          use: [
+            {
+              loader: 'vue-loader'
+            }
           ]
         }
       ]
@@ -86,7 +107,7 @@ module.exports = [
      */
     devServer: {
       compress: true,
-      contentBase: path.resolve('.'),
+      contentBase: path.resolve('.', 'docs'),
       port: 8080,
       historyApiFallback: true,
       https: true
