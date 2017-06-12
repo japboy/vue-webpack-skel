@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const env = process.env
 
@@ -56,10 +56,7 @@ module.exports = [
               }
             },
             {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: 'inline'
-              }
+              loader: 'postcss-loader'
             }
           ]
         },
@@ -67,7 +64,10 @@ module.exports = [
           test: /\.vue$/,
           use: [
             {
-              loader: 'vue-loader'
+              loader: 'vue-loader',
+              options: {
+                esModule: true
+              }
             }
           ]
         }
@@ -78,10 +78,11 @@ module.exports = [
      * @see https://webpack.js.org/configuration/plugins/
      */
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify(env.NODE_ENV)
-        }
+      /**
+       * @see https://webpack.js.org/plugins/environment-plugin/
+       */
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: env.NODE_ENV || 'development'
       }),
 
       /**
@@ -95,7 +96,12 @@ module.exports = [
       }),
 
       /**
-       * @see https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
+       * @see https://medium.com/webpack/webpack-3-official-release-15fd2dd8f07b
+       */
+      new webpack.optimize.ModuleConcatenationPlugin(),
+
+      /**
+       * @see https://github.com/webpack-contrib/uglifyjs-webpack-plugin
        */
       new UglifyJSPlugin({
         sourceMap: true

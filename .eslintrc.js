@@ -1,6 +1,6 @@
 module.exports = {
-    'extends': 'standard',
-    'plugins': [
-        'html'
-    ]
+  'extends': 'standard',
+  'plugins': [
+    'html'
+  ]
 }
