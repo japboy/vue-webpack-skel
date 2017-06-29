@@ -5,14 +5,17 @@ const app = new Vue({
   data: {
     parentName: 'Donald'
   },
-  render: h => h(App, {
-    props: app.$data
-  })
+  // el: '#app', // Possible if DOMContentLoaded already
+  render (createElement) {
+    return createElement(App, {
+      props: app.$data
+    })
+  }
 })
 
 function init (ev) {
   document.removeEventListener(ev.type, init)
-  app.$mount('#app')
+  app.$mount('#app') // Wait for DOMContentLoaded
   console.log('Hello.')
 }
 
