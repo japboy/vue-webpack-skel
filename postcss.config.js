@@ -1,8 +1,12 @@
 module.exports = () => ({
-  map: 'inline',
+  // @see https://github.com/postcss/postcss/blob/master/docs/source-maps.md#postcss-and-source-maps
+  map: {
+    inline: false
+  },
   plugins: {
     'postcss-import': {},
     'postcss-cssnext': {
+      // @see https://github.com/ai/browserslist#browserslist
       browsers: [
         'Android >= 4',
         'Chrome >= 50',

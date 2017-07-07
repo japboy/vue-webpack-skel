@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const env = process.env
 
@@ -12,6 +12,7 @@ module.exports = [
     entry: {
       main: path.resolve('.', 'src', 'index.js'),
       vendor: [
+        'babel-polyfill',
         'normalize.css',
         'vue'
       ]
@@ -22,6 +23,7 @@ module.exports = [
      */
     output: {
       filename: '[name].js',
+      chunkFilename: '[name].js',
       path: path.resolve('.', 'docs', 'assets'),
       publicPath: '/assets/'
     },
@@ -61,12 +63,19 @@ module.exports = [
           ]
         },
         {
-          test: /\.vue$/,
+          test: /!(\.chunk)\.vue$/,
           use: [
             {
               loader: 'vue-loader',
               options: {
-                esModule: true
+                // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
+                cssModules: {
+                  localIdentName: '[hash:base64:7]',
+                  camelCase: true
+                },
+                // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule
+                // Must be false with dynamic imports
+                esModule: false
               }
             }
           ]
@@ -122,6 +131,6 @@ module.exports = [
     /**
      * @see https://webpack.js.org/configuration/devtool/
      */
-    devtool: 'inline-source-map'
+    devtool: 'source-map'
   }
 ]

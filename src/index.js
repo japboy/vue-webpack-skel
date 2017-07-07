@@ -1,22 +1,39 @@
 import Vue from 'vue'
-import App from './App.vue'
 
-const app = new Vue({
-  data: {
-    parentName: 'Donald'
-  },
-  // el: '#app', // Possible if DOMContentLoaded already
-  render (createElement) {
-    return createElement(App, {
-      props: app.$data
-    })
+import './index.css'
+
+const appLoaded = import(/* webpackChunkName: "App" */ 'vue-loader?{"cssModules":{"localIdentName":"[hash:base64:7]","camelCase":true},"esModule":false}!./App.chunk.vue')
+
+const documentLoaded = new Promise((resolve) => {
+  const loaded = (event) => {
+    event.target.removeEventListener(event.type, loaded)
+    resolve(event.target)
   }
+  document.addEventListener('DOMContentLoaded', loaded, false)
 })
 
-function init (ev) {
-  document.removeEventListener(ev.type, init)
-  app.$mount('#app') // Wait for DOMContentLoaded
-  console.log('Hello.')
+async function init () {
+  try {
+    const initiated = await Promise.all([appLoaded, documentLoaded])
+    const App = initiated[0]
+
+    const app = new Vue({
+      data: {
+        parentName: 'Donald'
+      },
+      // el: '#app', // Possible if DOMContentLoaded already
+      render (createElement) {
+        return createElement(App, {
+          props: app.$data
+        })
+      }
+    })
+
+    app.$mount('#app') // In case to assign entry DOM later
+  } catch (error) {
+    console.warn(error.message)
+  }
 }
 
-document.addEventListener('DOMContentLoaded', init, false)
+console.log('Hello.')
+init()

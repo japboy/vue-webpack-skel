@@ -1,6 +1,7 @@
 module.exports = {
-  'extends': 'standard',
-  'plugins': [
+  parser: 'babel-eslint',
+  plugins: [
     'html'
-  ]
+  ],
+  extends: 'standard'
 }
