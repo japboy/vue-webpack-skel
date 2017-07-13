@@ -10,7 +10,7 @@ module.exports = [
      * @see https://webpack.js.org/configuration/entry-context/
      */
     entry: {
-      main: path.resolve('.', 'src', 'index.js'),
+      main: path.resolve(__dirname, 'src', 'index.js'),
       vendor: [
         'babel-polyfill',
         'normalize.css',
@@ -24,7 +24,7 @@ module.exports = [
     output: {
       filename: '[name].js',
       chunkFilename: '[name].js',
-      path: path.resolve('.', 'docs', 'assets'),
+      path: path.resolve(__dirname, 'docs', 'assets'),
       publicPath: '/assets/'
     },
 
@@ -58,12 +58,38 @@ module.exports = [
               }
             },
             {
-              loader: 'postcss-loader'
+              loader: 'postcss-loader',
+              options: {
+                config: {
+                  ctx: {
+                    env
+                  },
+                  path: path.resolve(__dirname, 'postcss.config.js')
+                }
+              }
             }
           ]
         },
         {
           test: /!(\.chunk)\.vue$/,
+          use: [
+            {
+              loader: 'vue-loader',
+              options: {
+                // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
+                cssModules: {
+                  localIdentName: '[hash:base64:7]',
+                  camelCase: true
+                },
+                // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule
+                // Must be false with dynamic imports
+                esModule: true
+              }
+            }
+          ]
+        },
+        {
+          test: /\.chunk\.vue$/,
           use: [
             {
               loader: 'vue-loader',
@@ -122,7 +148,7 @@ module.exports = [
      */
     devServer: {
       compress: true,
-      contentBase: path.resolve('.', 'docs'),
+      contentBase: path.resolve(__dirname, 'docs'),
       port: 8080,
       historyApiFallback: true,
       https: true

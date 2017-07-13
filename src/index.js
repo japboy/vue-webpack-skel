@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import './index.css'
 
-const appLoaded = import(/* webpackChunkName: "App" */ 'vue-loader?{"cssModules":{"localIdentName":"[hash:base64:7]","camelCase":true},"esModule":false}!./App.chunk.vue')
+const appLoaded = import(/* webpackChunkName: "App" */ './App.chunk.vue')
 
 const documentLoaded = new Promise((resolve) => {
   const loaded = (event) => {
