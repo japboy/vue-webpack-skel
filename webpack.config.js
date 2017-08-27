@@ -61,9 +61,7 @@ module.exports = [
               loader: 'postcss-loader',
               options: {
                 config: {
-                  ctx: {
-                    env
-                  },
+                  ctx: {},
                   path: path.resolve(__dirname, 'postcss.config.js')
                 }
               }
@@ -76,11 +74,18 @@ module.exports = [
             {
               loader: 'vue-loader',
               options: {
+                postcss: {
+                  config: {
+                    ctx: {},
+                    path: path.resolve(__dirname, 'postcss.config.js')
+                  }
+                },
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
                 cssModules: {
                   localIdentName: '[hash:base64:7]',
                   camelCase: true
                 },
+                cssSourceMap: false,
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule
                 // Must be false with dynamic imports
                 esModule: true
@@ -94,11 +99,18 @@ module.exports = [
             {
               loader: 'vue-loader',
               options: {
+                postcss: {
+                  config: {
+                    ctx: {},
+                    path: path.resolve(__dirname, 'postcss.config.js')
+                  }
+                },
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
                 cssModules: {
                   localIdentName: '[hash:base64:7]',
                   camelCase: true
                 },
+                cssSourceMap: false,
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule
                 // Must be false with dynamic imports
                 esModule: false

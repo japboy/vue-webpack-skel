@@ -27,7 +27,7 @@ module.exports = (ctx) => {
       'postcss-cssnext': {
         browsers: browserslist
       },
-      'cssnano': ctx.env === 'production' ? cssnano : false
+      'cssnano': process.env.NODE_ENV === 'production' ? cssnano : false
     }
   }
 }
