@@ -1,35 +1,70 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
 
 import './index.css'
 
-const appLoaded = import(/* webpackChunkName: "App" */ './App.chunk.vue')
+Vue.use(Vuex)
+Vue.use(VueRouter)
 
-const documentLoaded = new Promise((resolve) => {
-  const loaded = (event) => {
-    event.target.removeEventListener(event.type, loaded)
-    resolve(event.target)
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
   }
-  document.addEventListener('DOMContentLoaded', loaded, false)
 })
 
 async function init () {
   try {
-    const initiated = await Promise.all([appLoaded, documentLoaded])
-    const App = initiated[0]
+    const [ Top, Sub ] = await Promise.all([
+      import(/* webpackChunkName: "Top" */ './Top.chunk.vue'),
+      import(/* webpackChunkName: "Sub" */ './Sub.chunk.vue')
+    ])
+
+    const routes = [
+      {
+        path: '/',
+        component: Top,
+        props: () => ({ store })
+      },
+      {
+        path: '/:id',
+        component: Top,
+        props: (route) => {
+          return {
+            id: route.params.id,
+            store
+          }
+        }
+      }
+    ]
+
+    const router = new VueRouter({
+      routes
+    })
 
     const app = new Vue({
-      data: {
-        parentName: 'Donald'
-      },
-      // el: '#app', // Possible if DOMContentLoaded already
+      name: 'app-root',
+      router
+    })
+
+    const sub = new Vue({
+      name: 'sub-root',
       render (createElement) {
-        return createElement(App, {
-          props: app.$data
+        return createElement(Sub, {
+          props: {
+            store
+          }
         })
       }
     })
 
-    app.$mount('#app') // In case to assign entry DOM later
+    app.$mount('#app')
+    sub.$mount('#subapp')
   } catch (error) {
     console.warn(error.message)
   }
