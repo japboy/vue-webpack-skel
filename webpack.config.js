@@ -152,8 +152,19 @@ module.exports = [
        */
       new UglifyJSPlugin({
         sourceMap: true
-      })
+      }),
+
+      /**
+       * @see https://webpack.js.org/plugins/hot-module-replacement-plugin/
+       */
+      new webpack.HotModuleReplacementPlugin()
     ],
+
+    resolve: {
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js'
+      }
+    },
 
     /**
      * @see https://webpack.js.org/configuration/dev-server/
@@ -163,6 +174,7 @@ module.exports = [
       contentBase: path.resolve(__dirname, 'docs'),
       port: 8080,
       historyApiFallback: true,
+      hot: true,
       https: true
     },
 

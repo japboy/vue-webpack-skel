@@ -39,7 +39,7 @@
     "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-standard": "3.0.1",
     "eslint-plugin-vue": "git://github.com/vuejs/eslint-plugin-vue#v3.12.0",
-    "postcss": "6.0.9",
+    "postcss": "6.0.10",
     "postcss-cssnext": "3.0.2",
     "postcss-import": "10.0.0",
     "postcss-loader": "2.0.6",
@@ -49,6 +49,7 @@
     "stylelint-processor-html": "1.0.0",
     "uglify-es": "git://github.com/mishoo/UglifyJS2#harmony-v3.0.28",
     "uglifyjs-webpack-plugin": "0.4.6",
+    "vue-hot-reload-api": "2.1.0",
     "vue-loader": "13.0.4",
     "vue-template-compiler": "2.4.2",
     "webpack": "3.5.5",
@@ -57,6 +58,8 @@
   "dependencies": {
     "babel-polyfill": "6.26.0",
     "normalize.css": "7.0.0",
-    "vue": "2.4.2"
+    "vue": "2.4.2",
+    "vue-router": "2.7.0",
+    "vuex": "2.3.1"
   }
 }
