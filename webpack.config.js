@@ -54,6 +54,7 @@ module.exports = [
             {
               loader: 'css-loader',
               options: {
+                sourceMap: true,
                 importLoaders: 1
               }
             },
@@ -78,14 +79,14 @@ module.exports = [
                   config: {
                     ctx: {},
                     path: path.resolve(__dirname, 'postcss.config.js')
-                  }
+                  },
+                  sourceMap: true
                 },
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
                 cssModules: {
-                  localIdentName: '[hash:base64:7]',
-                  camelCase: true
+                  localIdentName: '[hash:base64:7]'
                 },
-                cssSourceMap: false,
+                cssSourceMap: true,
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule
                 // Must be false with dynamic imports
                 esModule: true
@@ -99,18 +100,19 @@ module.exports = [
             {
               loader: 'vue-loader',
               options: {
+                sourceMap: true,
                 postcss: {
                   config: {
                     ctx: {},
                     path: path.resolve(__dirname, 'postcss.config.js')
-                  }
+                  },
+                  sourceMap: true
                 },
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
                 cssModules: {
-                  localIdentName: '[hash:base64:7]',
-                  camelCase: true
+                  localIdentName: '[hash:base64:7]'
                 },
-                cssSourceMap: false,
+                cssSourceMap: true,
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule
                 // Must be false with dynamic imports
                 esModule: false

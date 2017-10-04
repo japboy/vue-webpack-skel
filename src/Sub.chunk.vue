@@ -25,7 +25,12 @@
 </script>
 
 <style lang="postcss" module>
+  :root {
+    --foo: green;
+  }
+
   .aside {
+    background-color: var(--foo);
     position: absolute;
     right: 30px;
     top: 30px;

@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main :class="$style.background">
     <p>Hello, {{ id }}.</p>
   </main>
 </template>
@@ -25,3 +25,13 @@
     }
   }
 </script>
+
+<style lang="postcss" module>
+  :root {
+    --foo: orange;
+  }
+
+  .background {
+    background-color: var(--foo);
+  }
+</style>
