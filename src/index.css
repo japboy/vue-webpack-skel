@@ -1,3 +1,7 @@
+:root {
+  --padding-size: 3rem;
+}
+
 body {
-  padding: 1rem;
+  padding: var(--padding-size);
 }

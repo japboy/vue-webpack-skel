@@ -12,22 +12,15 @@ const browserslist = [
   'Safari >= 6'
 ]
 
-const cssnano = {
-  autoprefixer: false
-}
-
 module.exports = (ctx) => {
   return {
     // @see https://github.com/postcss/postcss/blob/master/docs/source-maps.md#postcss-and-source-maps
-    map: {
-      inline: false
-    },
+    map: { inline: false },
     plugins: {
       'postcss-import': {},
       'postcss-cssnext': {
         browsers: browserslist
-      },
-      'cssnano': process.env.NODE_ENV === 'production' ? cssnano : false
+      }
     }
   }
 }

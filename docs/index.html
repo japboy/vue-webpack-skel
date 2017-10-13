@@ -2,8 +2,11 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="preload" href="./assets/runtime.js" as="script"><!-- production only -->
+        <link rel="preload" href="./assets/vendor.js" as="script">
+        <link rel="preload" href="./assets/main.js" as="script">
         <title>vue-webpack-skel</title>
-        <script src="./assets/manifest.js" defer></script>
+        <script src="./assets/runtime.js" defer></script><!-- production only -->
         <script src="./assets/vendor.js" defer></script>
         <script src="./assets/main.js" defer></script>
     </head>

@@ -20,9 +20,12 @@ const store = new Vuex.Store({
 
 async function init () {
   try {
-    const [ Top, Sub ] = await Promise.all([
-      import(/* webpackChunkName: "Top" */ './Top.chunk.vue'),
-      import(/* webpackChunkName: "Sub" */ './Sub.chunk.vue')
+    const [
+      { default: Top },
+      { default: Sub }
+    ] = await Promise.all([
+      import(/* webpackChunkName: "Top" */ './Top.vue'),
+      import(/* webpackChunkName: "Sub" */ './Sub.vue')
     ])
 
     const routes = [
