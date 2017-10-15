@@ -21,9 +21,9 @@ module.exports = [
      */
     output: {
       filename: '[name].js',
-      chunkFilename: '[name]-chunk.js',
+      chunkFilename: '[chunkhash:7]-chunk.js',
       path: path.resolve(__dirname, '..', '..', 'docs', 'assets'),
-      publicPath: '/assets/'
+      publicPath: './assets/'
     },
 
     /**
