@@ -53,19 +53,13 @@ module.exports = [
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true,
+                minimize: false,
+                sourceMap: false,
                 importLoaders: 1
               }
             },
             {
-              loader: 'postcss-loader',
-              options: {
-                config: {
-                  ctx: {},
-                  // specify directory path to postcss.config.js
-                  path: path.resolve(__dirname)
-                }
-              }
+              loader: 'postcss-loader'
             }
           ]
         },
@@ -76,26 +70,24 @@ module.exports = [
               loader: 'vue-loader',
               // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
               options: {
+                cssSourceMap: true,
+                esModule: true,
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
                 cssModules: {
                   // [hash:base64] changes depending on build platforms (eg. windows or mac)
                   localIdentName: '[hash:base64:7]'
-                },
-                postcss: {
-                  config: {
-                    ctx: {},
-                    // specify directory path to postcss.config.js
-                    path: path.resolve(__dirname)
-                  }
-                },
-                cssSourceMap: true,
-                esModule: true,
-                cacheBusting: false
+                }
               }
             }
           ]
         }
       ]
+    },
+
+    resolve: {
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js'
+      }
     },
 
     /**
@@ -106,8 +98,7 @@ module.exports = [
        * @see https://webpack.js.org/plugins/dll-plugin/#dllreferenceplugin
        */
       new webpack.DllReferencePlugin({
-        context: path.resolve(__dirname, '..', '..', 'docs', 'assets'),
-        // manifest: require('../../docs/assets/vendor-manifest.json')
+        context: path.resolve(__dirname, '..', '..'), // PROJECT ROOT
         manifest: path.resolve(__dirname, '..', '..', 'docs', 'assets', 'vendor-manifest.json')
       }),
 
@@ -129,10 +120,15 @@ module.exports = [
       new webpack.optimize.ModuleConcatenationPlugin()
     ],
 
-    resolve: {
-      alias: {
-        'vue$': 'vue/dist/vue.esm.js'
-      }
+    // @see https://webpack.js.org/configuration/dev-server/
+    devServer: {
+      clientLogLevel: 'info',
+      compress: true,
+      contentBase: path.join(__dirname, '..', '..', 'docs'),
+      host: '0.0.0.0',
+      hot: true,
+      https: true,
+      port: 3000
     },
 
     /**

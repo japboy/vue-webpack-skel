@@ -52,19 +52,13 @@ module.exports = [
             {
               loader: 'css-loader',
               options: {
+                minimize: false,
                 sourceMap: false,
                 importLoaders: 1
               }
             },
             {
-              loader: 'postcss-loader',
-              options: {
-                config: {
-                  ctx: {},
-                  // specify directory path to postcss.config.js
-                  path: path.resolve(__dirname)
-                }
-              }
+              loader: 'postcss-loader'
             }
           ]
         },
@@ -75,21 +69,13 @@ module.exports = [
               loader: 'vue-loader',
               // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md
               options: {
+                cssSourceMap: false,
+                esModule: true,
                 // @see https://github.com/vuejs/vue-loader/blob/master/docs/en/features/css-modules.md#configuring-css-loader-query
                 cssModules: {
                   // [hash:base64] changes depending on build platforms (eg. windows or mac)
                   localIdentName: '[hash:base64:7]'
-                },
-                postcss: {
-                  config: {
-                    ctx: {},
-                    // specify directory path to postcss.config.js
-                    path: path.resolve(__dirname)
-                  }
-                },
-                cssSourceMap: false,
-                esModule: true,
-                cacheBusting: true
+                }
               }
             }
           ]

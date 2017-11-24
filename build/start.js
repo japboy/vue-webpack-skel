@@ -5,81 +5,94 @@ const rimraf = require('rimraf')
 const Webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 
-const webpackVendorConfig = require('./development/webpack.vendor.config')
-const webpackMainConfig = require('./development/webpack.main.config')
+const vendorConfig = require('./development/webpack.vendor.config')
+const mainConfigs = require('./development/webpack.main.config')
 
-const assetRootPath = path.resolve(__dirname, '..', 'docs', 'assets')
-const assetVendorManifestPath = path.resolve(assetRootPath, 'vendor-manifest.json')
+const vendorManifestPath = path.resolve(mainConfigs[0].output.path, 'vendor-manifest.json')
 const packagePath = path.resolve(__dirname, '..', 'package.json')
 
+const hmr = process.env.HMR === '1'
+const textReset = '\x1b[0m'
+const textBright = '\x1b[1m'
+
+function fixed (number, digit = 2) {
+  return (`0${number}`).slice(-digit)
+}
+function now () {
+  const date = new Date()
+  // date.setTime(date.getTime() + (1000 * 60 * 60 * 9))
+  return `${fixed(date.getHours())}:${fixed(date.getMinutes())}:${fixed(date.getSeconds())}`
+}
+
 function buildVendorAssets (callback) {
-  rimraf(`${assetRootPath}/**/*`, (error) => {
-    if (error) throw error
+  process.stdout.write(` 💪 ${textBright}Full-building...${textReset}\n\n`)
 
-    Webpack(webpackVendorConfig, (error, stats) => {
-      if (error) throw error
+  rimraf('../assets/**/*', (rmError) => {
+    if (rmError) throw rmError
 
-      process.stdout.write(stats.toString({
-        colors: true,
-        modules: false,
-        children: false,
-        chunks: false,
-        chunkModules: false
-      }) + '\n\n')
+    Webpack(vendorConfig, (vendorError, stats) => {
+      if (vendorError) throw vendorError
 
       if (stats.hasErrors()) {
-        console.error('Build failed with errors.')
+        process.stdout.write(`${stats.toString('errors-only')}\n\n`)
+        process.stdout.write(` ⛔️ ${textBright}Error occurs${textReset}\n\n`)
         process.exit(1)
       }
+      process.stdout.write(`${stats.toString('minimal')}\n\n`)
+      process.stdout.write(` ⚡️ ${textBright}Built vendor assets${textReset}\n\n`)
 
-      callback()
+      callback.apply(this)
     })
   })
 }
 
 function buildMainAssetsAndStartDevServer () {
-  const compiler = Webpack(webpackMainConfig)
-  const server = new WebpackDevServer(compiler, {
-    stats: {
-      colors: true,
-      modules: false,
-      children: false,
-      chunks: false,
-      chunkModules: false
-    },
-    // @see https://webpack.js.org/configuration/dev-server/
-    compress: true,
-    contentBase: path.resolve(__dirname, '..', 'docs'),
-    historyApiFallback: true,
-    host: '0.0.0.0',
-    hot: true,
-    https: true,
-    port: 9000
+  if (!hmr) {
+    const watchEnabledMainConfigs = mainConfigs.map(config => Object.assign({}, config, { watch: true }))
+    Object.assign(mainConfigs, watchEnabledMainConfigs)
+  }
+  const compiler = Webpack(mainConfigs, (error, stats) => {
+    if (error) throw error
+    if (stats.hasErrors()) {
+      process.stdout.write(`${stats.toString('errors-only')}\n\n`)
+      process.stdout.write(` ⛔️ ${textBright}Error occurs${textReset}\n\n`)
+    } else {
+      process.stdout.write(`${stats.toString('minimal')}\n\n`)
+      process.stdout.write(` ⚡️ ${textBright}Built partial assets${textReset} @${now()}\n\n`)
+    }
   })
 
-  server.listen(9000, '0.0.0.0', () => {
-    console.log('Starting server on http://0.0.0.0:9000')
-  })
+  if (hmr) {
+    const statsOptions = { stats: 'minimal' }
+    const devServerOptions = mainConfigs[0].devServer
+    const options = Object.assign({}, statsOptions, devServerOptions)
+    const server = new WebpackDevServer(compiler, options)
+
+    server.listen(devServerOptions.port, devServerOptions.host, () => {
+      const protocol = devServerOptions.https ? 'https' : 'http'
+      process.stdout.write(` 🌏 ${textBright}Launched server:${textReset} ${protocol}://${devServerOptions.host}:${devServerOptions.port}\n\n`)
+    })
+  }
 }
 
-fs.stat(assetVendorManifestPath, (error, stats) => {
-  if (error) {
-    console.warn(error.message)
+fs.stat(vendorManifestPath, (vendorError, vendorStats) => {
+  if (vendorError) {
     buildVendorAssets(buildMainAssetsAndStartDevServer)
     return
   }
 
-  const assetVendorManifestLastModified = Date.parse(stats.mtime)
+  const assetVendorManifestLastModified = Date.parse(vendorStats.mtime)
 
-  fs.stat(packagePath, (error, stats) => {
-    if (error) throw error
+  fs.stat(packagePath, (packageError, packageStats) => {
+    if (packageError) throw packageError
 
-    const packageLastModified = Date.parse(stats.mtime)
+    const packageLastModified = Date.parse(packageStats.mtime)
 
     if (assetVendorManifestLastModified < packageLastModified) {
       buildVendorAssets(buildMainAssetsAndStartDevServer)
       return
     }
+
     buildMainAssetsAndStartDevServer()
   })
 })
